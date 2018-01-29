@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			img{
+				position:absolute;
+				width:100px;
+				height:100px;
+				left: calc(50% - 50px);
+				top: calc(50% - 50px);
+				animation:myfirst 1.5s infinite alternate;
+				-moz-animation:myfirst 1.5s infinite alternate; /* Firefox */
+				-webkit-animation:myfirst 1.5s infinite alternate; /* Safari and Chrome */
+				-o-animation:myfirst 1.5s infinite alternate; /* Opera */
+			}
+			
+			@keyframes myfirst
+			{
+				from {width: 100px;height:100px;}
+				to {width: 30px;height:30px;transform: translate(35px,35px);}
+			}
+			
+			@-moz-keyframes myfirst /* Firefox */
+			{
+				from {width: 100px;height:100px;}
+				to {width: 30px;height:30px;transform: translate(35px,35px);}
+			}
+			
+			@-webkit-keyframes myfirst /* Safari and Chrome */
+			{
+				from {width: 100px;height:100px;}
+				to {width: 30px;height:30px;transform: translate(35px,35px);}
+			}
+			
+			@-o-keyframes myfirst /* Opera */
+			{
+				from {width: 100px;height:100px;}
+				to {width: 30px;height:30px;transform: translate(35px,35px);}
+			}
+		</style>
+	</head>
+	<body>
+		<img src="img/huo.png"/>
+	</body>
+</html>

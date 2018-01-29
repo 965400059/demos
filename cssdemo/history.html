@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			.hd {
+			    height:60px;
+			    line-height: 60px;
+			    color:#f8f8f8;
+			    font-family: "微软雅黑" ;
+			    font-size: 24px;
+			    text-align: center;
+			    background: #49b49b;
+			}
+			#list {
+			    border-bottom:2px solid #49b49b;
+			    height:32px;
+			    width:520px;
+			    list-style:none;
+			}
+			#list li {
+			    padding:0px;
+			    margin-left:10px;
+			    width:84px;
+			    height:32px;
+			    float : left;
+			}
+			#list li a {
+			    padding:0px;
+			    width:84px;
+			    height:32px;
+			    line-height: 32px;
+			    background: #49b49b;
+			    color:#fff;
+			    font-family: arial ;
+			    font-size: 13px;
+			    text-align: center;
+			    display:block;
+			    text-decoration:none;
+			}
+			#list li a:hover {
+			    background: #019875;
+			}
+			#content-main {
+			    width:556px;
+			    height:220px;
+			    border:2px solid #49b49b;
+			}
+		</style>
+	</head>
+	<body>    
+	    <div class="hd">bbSPA测试页面</div>
+	    <ul id="list" >
+	        <li><a href="#beijing">北京</a></li>
+	        <li><a href="#shanghai">上海</a></li>
+	        <li><a href="#shenzhen">深圳</a></li>
+	        <li><a href="#guangzhou">广州</a></li>
+	        <li><a href="#tianjin">天津</a></li>
+	    </ul>
+	    <div  id="content-main"></div>
+	   
+	   <script src="js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+	    <script type="text/javascript">
+	    	function bbSPA(elem){
+			    this.elem = elem ;
+			} ;
+			var bbSPAProto = bbSPA.prototype ;
+			bbSPAProto.getElem = function(){
+			    return this.elem ;
+			} ;
+			bbSPAProto._getDefaultHash = function(){
+			    return window.location.hash ;
+			} ;
+			bbSPAProto._getCurrentHash = function(){
+			    return this.getElem().eq(1).attr("href") ;
+			} ;
+			bbSPAProto._parseHash = function(hash){
+			    return hash.split("#")[1] ;
+			} ;
+			bbSPAProto._fnPopStateHandler = function(target){
+			    var that = this ;
+			    var elem = target || null ;
+			    var query = this._getDefaultHash() ;
+			    if(!query){
+			        if(elem = this._getElemByIndex(1)){
+			            this._addToHistory(elem.attr("href"),true) ;
+			            this._fnPopStateHandler(elem) ;
+			        }
+			    }
+			    else{
+			        this.getElem().find("li a").each(function() {
+			            if (!elem && $(this).attr("href") == query){
+			                elem = $(this) ;
+			            }
+			        }) ;
+			        if(!elem){
+			            this._fnPopStateHandler(this._getElemByIndex(1)) ;
+			        }else{          
+			            elem.trigger("click") ;
+			        }  
+			    }
+			} ;
+			bbSPAProto._showContent = function(action){
+			    var that = this ;
+			    this._loadContent(this._parseHash(action) + ".data").done(function(data){
+			        that._renderContent(data["content"]) ;
+			        that._addToHistory(action,false) ;
+			    }).fail(function(){
+			        throw new Error("load content error !") ;
+			    }) ;   
+			} ;
+			bbSPAProto._loadContent = function(url){
+			    return $.ajax({
+			        url : url ,
+			        dataType : "json"
+			    }) ;
+			} ;
+			bbSPAProto._getElemByIndex = function(index){
+			    return this.getElem().find("li a").eq(index) ;
+			} ;
+			bbSPAProto._renderContent = function(text){
+			    this.getElem().next().text(text) ;
+			} ;
+			bbSPAProto._addToHistory = function(hash,noState){
+			    var stateObj = {
+			        hash : hash
+			    } ;
+			    if(noState){
+			        window.history.replaceState(stateObj,"",hash) ;
+			    }
+			    else{
+			        window.history.pushState(stateObj,"",hash) ;
+			    }
+			} ;
+			bbSPAProto._isSupportH5History = function(){
+			    return !!("pushState" in window.history) ;
+			} ;
+			bbSPAProto.init = function(){
+			    var that = this ;
+			    if(!this._isSupportH5History()){
+			        throw new Error("Not Support H5 History API !") ;
+			    }
+			    this.getElem().on("click","a",function(){
+			        that._showContent($(this).attr("href")) ;
+			        return false ;
+			    }) ;
+			    window.addEventListener("popstate",function(){
+			        that._fnPopStateHandler() ;
+			    },false) ;
+			    this._fnPopStateHandler() ;
+			} ;
+	    </script>
+	</body>
+</html>

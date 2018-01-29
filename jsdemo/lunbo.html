@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title></title>
+		<style type="text/css">
+			*{padding: 0px;margin: 0px; font-family:"Microsoft YaHei";}
+			ol,ul {
+			    list-style:none;
+			}
+		</style>
+		<link rel="stylesheet" type="text/css" href="css/lunbo.css"/>
+	</head>
+	<body>
+		<div class="banner lunbo">
+			<ul>
+				<li class="selected"  style="background-image: url(img/banner-1.png)"></li>
+				<li  style="background-image: url(img/banner-2.png)"></li>
+			</ul>
+			<ol>
+				<li class="selected"></li>
+				<li></li>
+			</ol>
+		</div>
+		
+		<script src="js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/lunbo.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var width = $(window).width()
+			if(width > 1024){
+				$(".banner").css("height",$(window).height());
+			}else{
+				var bl = width /1920;
+				var height = bl * 968;
+				$(".banner").css("height",height+"px");
+			}
+			$(".banner").lunbo({interval:3000});		
+		</script>
+	</body>
+</html>

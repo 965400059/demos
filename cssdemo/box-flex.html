@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			.test_box {
+			    display: -moz-box; 
+			    display: -webkit-box; 
+			    display: box; 
+			    width: 100%;
+			    height: 200px;
+			    background: #000;
+			 }
+			.list {
+			   height: 200px;
+			   line-height: 200px;
+			   color: #fff;
+			   text-align: center;
+			   font-size: 100px;
+			}
+			.list_one {
+			    -moz-box-flex: 1; 
+			    -webkit-box-flex: 1; 
+			    box-flex: 1;
+			    background: #04FF00;
+			}
+			.list_two{
+			    -moz-box-flex: 2; 
+			    -webkit-box-flex: 2; 
+			    box-flex: 2;
+			    background: #0064B1;
+			}
+			.list_w300{
+				width: 300px;
+				background: #FF0000;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="test_box">
+		    <div class="list list_one">1</div>
+		    <div class="list list_two">2</div>
+		    <div class="list list_w300">3</div>
+		</div>
+	</body>
+</html>

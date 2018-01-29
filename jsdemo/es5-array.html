@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			var scores = [5, 8, 3, 10];
+			var current = 7;
+			
+			function higherThanCurrent(score) {
+			  return score > current;
+			}
+			
+			//some	数组里面是否有符合条件的  有的话  就返回，返回以后 后面的就不再执行
+			if (scores.some(higherThanCurrent)) {	
+			  console.log("朕准了！");
+			}
+			//朕准了
+			
+			
+			//every	数组里面每一项都要符合，有一项不符合就会返回false，然后后面的就不在执行
+			if (scores.every(higherThanCurrent)) {
+			  console.log("朕准了！");
+			} else {
+			  console.log("来人，拖出去斩了！");        
+			}
+			//来人，拖出去斩了！
+			
+			//reduce	“减少”、“约简”		previous是初始值	current是后面的一个值	index下标		array原数组
+			var sum = [1, 2, 3, 4].reduce(function (previous, current, index, array) {
+			  return previous + current;
+			});
+			//循环index从1开始递增
+			//previous依次是1， 3, 6
+			//current依次是2,3,4
+			
+			console.log(sum);
+			//10
+			
+			//reduceRight	跟reduce相反
+			var data = [1, 2, 3, 4];
+			var specialDiff = data.reduceRight(function (previous, current, index) {
+			  if (index == 0) {
+			    return previous + current;
+			  }
+			  return previous - current;
+			});
+			//循环index从2（最后一个下标-1）开始递减
+			//previous依次是4， 1, -1
+			//current依次是3,2,1
+			
+			console.log(specialDiff);
+			//0
+				
+		</script>
+	</body>
+</html>

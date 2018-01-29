@@ -1,0 +1,24 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>layer-更懂你的web弹窗解决方案</title>
+  <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+  <script src="layer/layer.js"></script>
+</head>
+<body>
+	<p>1111</p>
+<script>
+	var index = layer.load(1, {
+	  shade: [0.1,'#000'] //0.1透明度的白色背景
+	});
+	
+	setTimeout(function(){
+		layer.close(index);
+	},3000)
+	
+</script>
+</body>
+</html>

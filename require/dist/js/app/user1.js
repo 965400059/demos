@@ -1,0 +1,1 @@
+define(["user/userList","user/userAdd","user/userDateils"],function(e,s,r){return{list:e,add:s,dateils:r}});

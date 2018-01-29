@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		
+		<h1>二分搜索</h1>
+		
+		<script src="js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+		
+			;(function ($) {	//这是一个闭包的方法   给jQuery封装方法
+				$.art = function (item) {
+					alert(item);
+			     }
+			})(jQuery);   
+			
+			Array.prototype.binarySearch = function(item) {	//这个是给数组添加了一个二分搜索的方法
+				var max = this.length-1;
+				var min = 0;
+				
+				while(min <= max){
+					var leng = Math.floor((max-min)/2) + min;
+					var sum = this[leng];
+					
+					if(sum == item){
+						return leng;
+					}else if(sum > item){
+						max = leng - 1;
+					}else{
+						min = leng + 1;
+					}
+				}
+				return -1;
+			}
+			
+			function binarySearch1(data,item){	//这个是循环的方式找出下标
+				var flot = -1;
+				$.each(data, function(index,i) {
+					if(i==item){
+						flot =  index;
+						return;
+					}
+				});
+				return flot;
+			}
+			
+			function binarySearch2(data,item){	//这个是一个二分搜索的方法
+				
+				var max = data.length-1;
+				var min = 0;
+				
+				while(min <= max){
+					var leng = Math.floor((max-min)/2) + min;
+					var sum = data[leng];
+					
+					if(sum == item){
+						return leng;
+					}else if(sum > item){
+						max = leng - 1;
+					}else{
+						min = leng + 1;
+					}
+				}
+				return -1;
+			}
+			
+			var data = [];
+			var filter = {};
+			while (data.length < 1000) {	//这里会产生一个长度1000的数组
+			    var num = Math.round(Math.random() * 10000);
+			    if (filter[num]) {
+			        continue;
+			    }
+			    filter[num] = true;
+			    data.push(num);
+			}
+			
+			function sortNumber(a, b)	//按照数值的大小对数字进行排序  如果没有这个方法数组排序会有BUG
+			{
+				return a - b
+			}
+			
+			console.log(data.sort(sortNumber).binarySearch(data[50]) === 50);
+			console.log(data.sort(sortNumber).binarySearch(-100) === -1);
+			console.log(binarySearch2(data.sort(sortNumber),data[50]));
+			console.log(binarySearch2(data.sort(sortNumber),data[-100]));
+			console.log(binarySearch2(data.sort(sortNumber),data[50]) === 50);
+			console.log(binarySearch2(data.sort(sortNumber),data[-100]) === -1);
+		</script>
+	</body>
+</html>

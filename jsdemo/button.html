@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			.btn{
+				position: relative;
+				display: block;
+				width: 100px;
+				height: 32px;
+				line-height: 32px;
+				text-align: center;
+				font-size:13px;
+				font-weight: 400;
+				border: solid 1px #e2e2e2;
+				border-radius: 3px;
+			}
+			.btn.active:before{
+			    position: absolute;
+			    z-index: 100;
+			    content: '';
+			    left: -1px;
+			    top: -1px;
+			    width: 98px;
+			    height: 30px;
+			    border: solid 2px #0071CE;
+			    border-radius: 3px;
+			    background: url(img/ok.png) 85px 2px / 12px no-repeat;
+			}
+			.btn.active:after{
+			    position: absolute;
+			    content: '';
+			    width: 0;
+			    height: 0;
+			    border-top: 32px solid #0071CE;
+			    border-left: 32px solid transparent;
+			    right: 0;
+			    top: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<label class="btn"><input type="checkbox" name="aa" id="aa" value="11" style="display: none;"/>按钮</label>		
+		<script src="js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$("input[type=checkbox]").change(function(){
+				if($(this).parent().hasClass('active')){
+					$(this).parent().removeClass("active");
+				}else{
+					$(this).parent().addClass("active");
+				}
+			})
+		</script>
+	</body>
+</html>

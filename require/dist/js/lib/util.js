@@ -1,0 +1,1 @@
+define(["jquery"],function(n){return{trim:function(r){return n.trim(r)}}});

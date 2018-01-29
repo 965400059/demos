@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<form id="myForm">
+			<input name="age" value="" placeholder="年龄"/>
+			<input id="myBtn" type="button" value="确定"/>
+		</form>
+		
+		
+		<table id="table">
+			<tr>
+				<th>序号</th>
+				<th>姓名</th>
+				<th>年龄</th>
+				<th>性别</th>
+			</tr>
+		</table>
+		
+		<script type="text/html" id="tmpl">
+			<tr>
+				<td>${id}</td>
+				<td>${name}</td>
+				<td>${age}</td>
+				<td>${sex == 1?'男':'女'}</td>
+			</tr>
+		</script>
+		
+		<script src="mock-min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/jquery.tmpl.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var users = [];
+			for(var i=0;i<20;i++){
+				users.push(Mock.mock({
+					id:i+1,
+					name:'@cname',
+					'age|18-60':1 ,
+					sex:'@integer(0,1)',
+				}))
+			}
+			
+			Mock.mock("user/getUser","post",function(options){
+				var params = {};
+				$.each(options.body.split("&"), function(index,item) {
+					var keyVal = item.split("=");
+					params[keyVal[0]] = keyVal[1];
+				});
+				
+				if(params.age != '' && params.age != null){
+					users = users.filter(function(item){
+						return item.age == params.age;
+					})
+				}
+				return users;
+			})
+			
+			
+			Mock.mock("user/setUser","post",function(options){
+				console.log(options);
+				return '11'
+			})
+			
+			$.post("user/setUser",{name:'张三'},function(data){
+				console.log(11)
+			},"json");
+			
+			$("#myBtn").click(function(){
+				var params = parseFormToObj("#myForm");
+				$.post("user/getUser",params,function(data){
+					$("#table tr:not(:first)").remove();
+					$("#tmpl").tmpl(data).appendTo("#table");
+				},"json");
+			})
+			
+			$("#myBtn").click();
+			
+			//表单数据转成对象
+			function parseFormToObj(form) {
+				var array = $(form).serializeArray();
+				var param = "{";
+				for (var i = 0; i < array.length; i++) {
+					var name = array[i].name;
+					var value = $.trim(array[i].value);
+					var placeholder = $.trim($("[name='" + name + "']").attr("placeholder"));
+					if (value === null || value === "" || value === placeholder) {
+						param = param + "\"" + name + "\":'',";
+					} else {
+						param = param + "\"" + name + "\":'" + value + "',";
+					}
+				}
+			
+				if (param.indexOf(",") != -1) {
+					param = param.substring(0, param.length - 1);
+				}
+				param = param + "}";
+				return (new Function("","return "+param))();
+			}
+			
+		</script>
+	</body>
+</html>

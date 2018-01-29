@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		
+		<ul id="a"></ul>
+			
+		</div>
+		
+		<script src="js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var a = $("#a");
+			var str = "";
+			var items = ["6M","10M","20M","50M","100M"];
+			$.each(items, function(index,item) {
+				var sum = parseInt(item.substring(0,item.length-1));
+				var sum2 = parseInt(item.replace("M",""));
+				if(sum<20){
+					str +=　"<li><a>"+item+"</a></li>";
+				}
+			});
+			a.html(str);
+		</script>
+	</body>
+</html>

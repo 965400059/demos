@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="highlight.css" />
+	</head>
+	<body>
+		<pre><code class="java">SUPPORTED_64_BIT_ABIS=[Ljava.lang.String;@7be3ef3
+versionCode=206
+BOARD=VKY
+BOOTLOADER=unknown
+TYPE=user
+matchers=[Ljava.lang.String;@e881629
+ID=HUAWEIVKY-AL00
+TIME=1502939615000
+BRAND=HUAWEI
+TAG=Build
+HARDWARE=hi3660
+SERIAL=Y2J7N17311004232
+SUPPORTED_ABIS=[Ljava.lang.String;@62107b0
+NO_HOTA=false
+CPU_ABI=armeabi-v7a
+IS_DEBUGGABLE=false
+RADIO=unknown
+replacements=[Ljava.lang.String;@3681dae
+MANUFACTURER=HUAWEI
+IS_EMULATOR=false
+SUPPORTED_32_BIT_ABIS=[Ljava.lang.String;@5ea8d62
+TAGS=release-keys
+CPU_ABI2=armeabi
+UNKNOWN=unknown
+PERMISSIONS_REVIEW_REQUIRED=false
+USER=test
+FINGERPRINT=HUAWEI/VKY-AL00/HWVKY:7.0/HUAWEIVKY-AL00/C00B172:user/release-keys
+HOST=android-22of24
+versionName=2.0.6
+PRODUCT=VKY-AL00
+DISPLAY=VKY-AL00C00B172
+HIDE_PRODUCT_INFO=false
+MODEL=VKY-AL00
+DEVICE=HWVKY
+java.lang.RuntimeException: Unable to start activity ComponentInfo{com.lenwotion.guidinghost/com.lenwotion.guidinghost.activity.InitActivity}: java.lang.NullPointerException: Attempt to invoke interface method 'retrofit2.Call com.lenwotion.guidinghost.interfaces.IDeviceInfoService.fetchDeviceInfo(java.lang.String)' on a null object reference
+	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2793)
+	at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2864)
+	at android.app.ActivityThread.-wrap12(ActivityThread.java)
+	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1567)
+	at android.os.Handler.dispatchMessage(Handler.java:105)
+	at android.os.Looper.loop(Looper.java:156)
+	at android.app.ActivityThread.main(ActivityThread.java:6577)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:942)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:832)
+Caused by: java.lang.NullPointerException: Attempt to invoke interface method 'retrofit2.Call com.lenwotion.guidinghost.interfaces.IDeviceInfoService.fetchDeviceInfo(java.lang.String)' on a null object reference
+	at com.lenwotion.guidinghost.activity.InitActivity.fetchDeviceInfo(InitActivity.java:407)
+	at com.lenwotion.guidinghost.activity.InitActivity.fetchDataFromServer(InitActivity.java:397)
+	at com.lenwotion.guidinghost.activity.InitActivity.uploadCrashLogSuccess(InitActivity.java:167)
+	at com.lenwotion.guidinghost.activity.InitActivity.uploadCrashLog(InitActivity.java:124)
+	at com.lenwotion.guidinghost.activity.InitActivity.initOtherData(InitActivity.java:380)
+	at com.lenwotion.guidinghost.activity.InitActivity.checkPermissions(InitActivity.java:347)
+	at com.lenwotion.guidinghost.activity.InitActivity.initPermssions(InitActivity.java:291)
+	at com.lenwotion.guidinghost.activity.InitActivity.initFunction(InitActivity.java:218)
+	at com.lenwotion.guidinghost.activity.InitActivity.onCreate(InitActivity.java:114)
+	at android.app.Activity.performCreate(Activity.java:6910)
+	at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1123)
+	at cn.jiguang.a.a.d.a.a.d.callActivityOnCreate(Unknown Source)
+	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2746)
+	... 9 more
+java.lang.NullPointerException: Attempt to invoke interface method 'retrofit2.Call com.lenwotion.guidinghost.interfaces.IDeviceInfoService.fetchDeviceInfo(java.lang.String)' on a null object reference
+	at com.lenwotion.guidinghost.activity.InitActivity.fetchDeviceInfo(InitActivity.java:407)
+	at com.lenwotion.guidinghost.activity.InitActivity.fetchDataFromServer(InitActivity.java:397)
+	at com.lenwotion.guidinghost.activity.InitActivity.uploadCrashLogSuccess(InitActivity.java:167)
+	at com.lenwotion.guidinghost.activity.InitActivity.uploadCrashLog(InitActivity.java:124)
+	at com.lenwotion.guidinghost.activity.InitActivity.initOtherData(InitActivity.java:380)
+	at com.lenwotion.guidinghost.activity.InitActivity.checkPermissions(InitActivity.java:347)
+	at com.lenwotion.guidinghost.activity.InitActivity.initPermssions(InitActivity.java:291)
+	at com.lenwotion.guidinghost.activity.InitActivity.initFunction(InitActivity.java:218)
+	at com.lenwotion.guidinghost.activity.InitActivity.onCreate(InitActivity.java:114)
+	at android.app.Activity.performCreate(Activity.java:6910)
+	at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1123)
+	at cn.jiguang.a.a.d.a.a.d.callActivityOnCreate(Unknown Source)
+	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2746)
+	at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2864)
+	at android.app.ActivityThread.-wrap12(ActivityThread.java)
+	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1567)
+	at android.os.Handler.dispatchMessage(Handler.java:105)
+	at android.os.Looper.loop(Looper.java:156)
+	at android.app.ActivityThread.main(ActivityThread.java:6577)
+	at java.lang.reflect.Method.invoke(Native Method)
+	
+</code></pre>
+		<script src="highlight.pack.js" type="text/javascript" charset="utf-8"></script>
+		<script>hljs.initHighlightingOnLoad();</script>
+	</body>
+</html>

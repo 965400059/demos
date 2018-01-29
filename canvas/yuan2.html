@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body style="background: #FFB400;">
+		
+		<div id="a"></div><div id="b"></div><div id="c"></div>
+		
+		<script src="../js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			drawRing({
+				parent: document.getElementById("a"),
+				perent:8
+			});
+			
+			drawRing({
+				parent: document.getElementById("b"),
+				perent:36
+			});
+			
+			drawRing({
+				parent: document.getElementById("c"),
+				perent:15
+			});
+			
+			function drawRing(opts) {
+			    var _opts = {
+			        parent: document.body,
+			        width: 80,
+			        radius: 32,
+			        arc: 8,
+			        perent: 60,
+			        color: ['#FF0000', '#fff'],
+			        textColor: '#fff',
+			        textSize: '32px',
+			        animated: true,
+			        after: function() {}
+			    }, k;
+			    for (k in opts) _opts[k] = opts[k];
+			    
+			    var parent = _opts.parent,
+			        width = _opts.width,
+			        radius = _opts.radius,
+			        arc = _opts.arc,
+			        perent = parseFloat(_opts.perent),
+			        color = _opts.color,
+			        textSize = _opts.textSize,
+			        textColor = _opts.textColor,
+			        c = document.createElement('canvas'),
+			        ctx = null,
+			        x = 0,
+			        animated = _opts.animated,
+			        after = _opts.after;
+			
+			    parent.appendChild(c);
+			    ctx = c.getContext("2d");
+			    ctx.canvas.width = width;
+			    ctx.canvas.height = width;
+			
+			    function clearFill() {
+			        ctx.clearRect(0, 0, width, width);
+			    }
+			
+			    function fillBG() {
+			        ctx.beginPath();
+			        ctx.lineWidth = arc;
+			        ctx.strokeStyle = color[0];
+			        ctx.arc(width / 2, width / 2, radius, 0, 2 * Math.PI);
+			        ctx.stroke();
+			    }
+			
+			    function fillArc(x) {
+			        ctx.beginPath();
+			        ctx.lineWidth = arc;
+			        ctx.strokeStyle = color[1];
+			        ctx.arc(width / 2, width / 2, radius, -90 * Math.PI / 180, ((60-perent+x) * 6 - 90) * Math.PI / 180);
+			        ctx.stroke();
+			    }
+			
+			    function fillText(x) {
+			        ctx.font = textSize + ' Arial';
+			        ctx.fillStyle = textColor;
+			        ctx.textBaseline = "middle";
+			        ctx.textAlign = 'center';
+			        ctx.fillText((perent-x<10?"0"+(perent-x):perent-x), width / 2, width / 2);
+			    }
+			
+			    function fill(x) {
+			        fillBG();
+			        fillArc(x);
+			        fillText(x);
+			    }
+			
+			    if (!animated) return fill(perent);
+			
+			    fill(x);
+			    
+			    !function animate() {
+			        if (++x > perent) return after && after();
+			        setTimeout(animate, 100);
+			        clearFill();
+			        fill(x);
+			    }();
+			}
+		</script>
+	</body>
+</html>

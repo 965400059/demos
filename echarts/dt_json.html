@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="main" style="width: 100%;height:700px;"></div>
+		<script src="../js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/echarts/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../js/echarts/china.js"></script>
+		<script type="text/javascript">
+			
+			$.get('hubei.json', function (hubeiJson) {
+			    echarts.registerMap('hubei', hubeiJson);
+			    var chart = echarts.init(document.getElementById('main'));
+			    chart.setOption({
+			        series: [{
+			            type: 'map',
+			            map: 'hubei'
+			        }]
+			    });
+			});
+		</script>
+	</body>
+</html>

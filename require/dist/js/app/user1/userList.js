@@ -1,0 +1,1 @@
+define(["require","exports","module"],function(e,i,n){i.init=function(){$("p").html("我是【列表】页")}});

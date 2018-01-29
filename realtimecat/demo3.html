@@ -1,0 +1,106 @@
+ <!DOCTYPE html>
+ <html lang="zh-CN">
+
+ <head>
+
+     <meta charset="utf-8">
+     <title>实时猫 Demo</title>
+
+     <!-- jQuery -->
+     <script src="https://unpkg.com/jquery@3.1.1"></script>
+     <!-- 实时猫 RealTimeCat JavaScript SDK -->
+     <script src="https://unpkg.com/realtimecatjs@0.4.10"></script>
+
+ </head>
+
+ <body>
+
+     <div id="media-list"></div>
+
+     <script>
+         (function ($) {
+
+             var localStream;
+             var mediaList = document.querySelector('#media-list');
+
+             /**************************************
+             *               建立会话
+             ***************************************/
+             // 使用token新建会话，
+             // 请将此处的Token替换为 从http://dashboard.shishimao.com/生成的Token
+             RTCat
+             .createSession("7e86065b-cbb2-4d86-a09e-d98654480697")
+             .then((session) => {
+
+                 bindSessionEvents(session);
+
+                 RTCat.createStream()
+                  .then((stream) => {
+                     localStream = stream;
+                     displayStream('self', stream);
+                     session.send({stream: stream});
+                  })
+                  .catch((err) => {
+                     console.log(err)
+                  })
+
+             })
+             .catch((err) => {
+                 console.log(err);
+             });
+
+             function bindSessionEvents(session) {
+
+                 session.on('in', (token)=> {
+                     console.log('someone in', token);
+                     if(localStream){
+                         session.sendTo({to: token, stream: localStream});
+                     }
+                 });
+
+                 session.on('out', (token)=> {
+                     console.log('someone out', token);
+                 });
+
+                 session.on('remote', (receiver)=> {
+                     var id = receiver.getId();
+                     receiver.on('stream', (stream)=> {
+                         displayStream(id, stream);
+                     });
+                     receiver.once('close', ()=> {
+                         $('#v-' + id).parent().remove();
+                     });
+                 });
+
+                 session.on('disconnected', () => {
+                     console.log('session disconnect');
+                 });
+
+             }
+
+             /********************************
+              *           工具函数
+              ********************************/
+             // 显示流
+             function displayStream(id, stream) {
+
+                 // Video container
+                 var videoContainer = document.createElement("div");
+                 videoContainer.setAttribute('style', "width: 600px; height:500px;");
+
+                 // Video player
+                 var videoPlayer = document.createElement('div');
+                 videoPlayer.setAttribute("id", "peer-" + id);
+
+                 videoContainer.appendChild(videoPlayer);
+                 mediaList.appendChild(videoContainer);
+
+                 stream.play("peer-" + id);
+                $("#peer-" + id + " video").attr("width", "100%")
+				$("#peer-" + id + " video").attr("height", "500px");
+             }
+
+         }).apply(this, [jQuery]);
+     </script>
+ </body>
+ </html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		
+		<script src="js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var data = [
+					{country: "中国", province: "福建", city: "漳州", county: "南靖县", village: ""},
+					{country: "中国", province: "福建", city: "漳州", county: "诏安县", village: ""},
+					{country: "中国", province: "福建", city: "漳州", county: "东山县", village: ""},
+					{country: "中国", province: "福建", city: "漳州", county: "龙文区", village: ""},
+					{country: "中国", province: "福建", city: "漳州", county: "龙海市", village: ""},
+					{country: "中国", province: "福建", city: "漳州", county: "漳浦县", village: ""},
+					{country: "中国", province: "福建", city: "漳州", county: "云霄县", village: ""},
+					{country: "中国", province: "福建", city: "漳州", county: "长泰县", village: ""},
+					{country: "中国", province: "福建", city: "漳州", county: "芗城区", village: ""},
+					{country: "中国", province: "福建", city: "漳州", county: "平和县", village: ""},
+					{country: "中国", province: "福建", city: "漳州", county: "华安县", village: ""}
+				]
+			
+			window.localStorage.setItem("fetchCityData",JSON.stringify(data));
+			
+			JSON.parse(window.localStorage.getItem("fetchCityData") || '[]')
+			
+			var provinceData = data.map(function(item){
+				return item.province;
+			})
+			var provinceList = [];
+			provinceData.forEach(function(item){
+				if($.inArray(item,provinceList) == -1){
+					provinceList.push(item);
+				}
+			})
+			console.log(provinceList);
+			
+			function getCitys(province){
+				var cityData = data.filter(function(item){
+							return item.province == province;
+						}).map(function(item){
+							return item.city;
+						});
+						
+				var cityList = [];
+				
+				cityData.forEach(function(item){
+					if($.inArray(item,cityList) == -1){
+						cityList.push(item);
+					}
+				})
+				return cityList;
+			}
+			
+			console.log(getCitys(provinceList[0]));
+			
+			function getCountys(province,city){
+				var countyList = data.filter(function(item){
+							return item.province == province && item.city == city;
+						}).map(function(item){
+							return item.county;
+						});
+						
+				return countyList;
+			}
+			
+			console.log(getCountys("福建","漳州"));
+			
+			function aa(option){
+				var opts = $.extend(false,{
+				},option);
+				console.log(opts);
+			}
+			
+			aa({b:11});
+		</script>
+	</body>
+</html>

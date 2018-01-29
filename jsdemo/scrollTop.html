@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			.div1{
+				position: fixed;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%,-50%);
+				width: 600px;
+				height: 300px;
+				background: #04FF00;
+				overflow: hidden;
+			}
+			.div2{
+				position: relative;
+				width: 100%;
+				height: 300px;
+				overflow-y: scroll;
+			}
+			a{
+				display: block;
+				position: absolute;
+				top: 100px;
+				right: 20px;
+				width: 100px;
+				height: 40px;
+				line-height: 40px;
+				background: #FF0000;
+				color: #fff;
+				text-align: center;
+				font-size: 14px;
+			}
+		</style>
+	</head>
+	<body>
+		
+		<div class="div1">
+			<div class="div2">
+				1<br />
+				1<br />
+				1<br />
+				1<br />
+				1<br />
+				1<br />
+				1<br />
+				1<br />
+				1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />
+				1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />
+				1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />1<br />
+				<a>保存</a>
+			</div>
+		</div>
+		<script src="js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(".div2").scroll(function(){
+				var top = $(this).scrollTop();
+				$("a").css("top",(top + 100));
+			});
+		</script>
+	</body>
+</html>

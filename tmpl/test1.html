@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		
+		<div id="show"></div>
+		
+		<script type="text/html" id="tmpl">
+			<h1>${a}</h1>
+			{{if b.length > 0}}
+				{{each(i,c) b}}
+					<h3>${c.a}</h3>
+					{{if c.b.length > 0}}
+						{{each(i,d) c.b}}
+							<span> ${d.a}  </span>
+						{{/each}}
+					{{/if}}
+				{{/each}}
+			{{/if}}
+		</script>
+		
+		<script src="../js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/jquery.tmpl.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var data = [
+							{a:1,b:[{a:11,b:[]}]},
+							{a:2,b:[{a:22,b:[{a:"aaa",b:[]}]}]},
+							{a:3,b:[
+										{a:33,b:[
+													{a:"bbb",b:[]},
+													{a:"ccc",b:[]},
+													{a:"ddd",b:[]},
+													{a:"eee",b:[]},
+													{a:"fff",b:[]}
+												]
+										},
+										{a:44,b:[
+													{a:"ggg",b:[]},
+												]
+										},
+									]
+							}
+						]
+						
+			$('#tmpl').tmpl(data).appendTo('#show');
+		</script>
+	</body>
+</html>

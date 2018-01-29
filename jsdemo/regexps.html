@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		
+		<script src="js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			
+			jQuery.extend({
+			    regexps : {
+							phone : /^1[34578]\d{9}$/,
+							email : /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/,
+							IdNumber : /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
+							nameCn : /^[\u4E00-\u9FA5]{1,6}$/,
+							nameEn : /^[0-9a-zA-Z_]{1,}$/,
+							accountNum : /^[a-zA-Z][a-zA-Z0-9_]{5,15}$/,
+						}
+			});
+			if($.regexps.phone.test("15071456691")){
+				console.log("手机号正确");	
+			}
+		</script>
+	</body>
+</html>

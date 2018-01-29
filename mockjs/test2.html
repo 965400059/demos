@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<input type="button" id="a" value="a" />	
+		<input type="button" id="b" value="b" />		
+		
+		<script src="mock-min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			
+			var a = 1;
+			
+			Mock.mock("/a","post",function(options){
+				console.log(a);
+			})
+			
+			
+			Mock.mock("/b","post",function(options){
+				a = 2;
+			})
+			
+			$("#a").click(function(){
+				$.post("/a",function(data){
+					console.log("a")
+				},"json");
+			})
+			
+			$("#b").click(function(){
+				$.post("/b",function(data){
+					console.log("b")
+				},"json");
+			})
+			
+			
+			
+		</script>
+	</body>
+</html>

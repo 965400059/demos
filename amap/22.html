@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css"/>
+		<script src="../js/mock-min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="http://webapi.amap.com/maps?v=1.3&key=您申请的key值"></script>
+    	<script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+	</head>
+	<body>
+		<div id="container"></div>
+		
+		<script type="text/javascript">
+			var vehicles = []
+			for(var i=0;i<20;i++){
+				vehicles.push(Mock.mock({
+					lng:'@float(100, 120, 4, 6)',
+					lat:'@float(25, 40, 4, 6)',
+					angle:'@float(0, 360)' 
+				}))
+			}
+			
+			
+			var map = new AMap.Map("container", {
+		        resizeEnable: true,
+		        center: [116.397428, 39.90923],
+		        zoom: 6
+		    });
+		    
+		    var markers = [];
+		   	vehicles.forEach(function(item,index){
+		    	var marker = new AMap.Marker({
+			        map: map,
+	            	angle : item.angle,
+	            	offset : new AMap.Pixel(-18, -18),
+	            	position: [item.lng,item.lat],
+	            	cursor: 'move',
+		         	icon: new AMap.Icon({            
+			            image: "map-dw.png",
+			            size: new AMap.Size(36, 36),  //图标大小
+			        }) 
+			    });
+			    markers.push(marker)
+		    })
+		 	
+		  	setInterval(function(){
+		  		var newVehicles = []
+				for(var i=0;i<20;i++){
+					newVehicles.push(Mock.mock({
+						lng:'@float(100, 120, 4, 6)',
+						lat:'@float(25, 40, 4, 6)',
+						angle:'@float(0, 360)' 
+					}))
+				}
+				newVehicles.forEach(function(item,index){
+					markers[index].setPosition([item.lng,item.lat]);
+					markers[index].setAngle(item.angle)
+			    })
+		  		
+		  	},1000)
+		</script>
+	</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			body{
+				background-color: #111;
+			}
+			textarea{
+				width: 100%;
+				height: 300px;
+			}
+			.color{color:#fff;}
+		</style>
+	</head>
+	<body>
+		<textarea id="textarea" maxlength="150" ></textarea>
+		<div id="showText" class="color">你还能输入150字</div>
+		<script src="js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var textarea = document.getElementById("textarea");
+			textarea.addEventListener("input",function(){
+				$("#showText").text("你还能输入"+(150-textarea.value.length)+"字");
+			});
+		</script>
+	</body>
+</html>

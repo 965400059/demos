@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="main" style="width: 100%;height:700px;"></div>
+		<script src="../js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/echarts/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+       	<script type="text/javascript" src="../js/echarts/china.js"></script>
+		
+		<script type="text/javascript">
+			var myChart = echarts.init(document.getElementById('main'));
+			function randomData() {
+			    return Math.round(Math.random()*8500);
+			}
+			
+			
+			option = {
+			    title: {
+			        text: 'S8使用量',
+			        subtext: '智能手机',
+			        left: 'center'
+			    },
+			    tooltip: {
+			        trigger: 'item'
+			    },
+			    visualMap: {
+			        min: 0,
+			        max: 20000,
+			        left: 'left',
+			        top: 'bottom',
+			        splitNumber: 7,
+			        text: ['高','低'],
+			        color : ['#000080','#8EBAEE']
+			    },
+			    series: [
+			        {
+			            name: 'S8使用量',
+			            type: 'map',
+			            mapType: 'china',
+			            label: {
+				            emphasis: {
+				                show: false
+				            }
+				        },
+				        itemStyle: {
+				            normal: {
+				                borderColor: '#fff'
+				            },
+				            emphasis: {
+				                areaColor: '#F7D688'
+				            }
+				        },
+			            data:[
+			                {name: '北京',value: randomData() },
+			                {name: '天津',value: randomData() },
+			                {name: '上海',value: randomData() },
+			                {name: '重庆',value: randomData() },
+			                {name: '河北',value: randomData() },
+			                {name: '河南',value: randomData() },
+			                {name: '云南',value: randomData() },
+			                {name: '辽宁',value: randomData() },
+			                {name: '黑龙江',value: randomData() },
+			                {name: '湖南',value: randomData() },
+			                {name: '安徽',value: randomData() },
+			                {name: '山东',value: randomData() },
+			                {name: '新疆',value: randomData() },
+			                {name: '江苏',value: randomData() },
+			                {name: '浙江',value: randomData() },
+			                {name: '江西',value: randomData() },
+			                {name: '湖北',value: randomData() },
+			                {name: '广西',value: randomData() },
+			                {name: '甘肃',value: randomData() },
+			                {name: '山西',value: randomData() },
+			                {name: '内蒙古',value: randomData() },
+			                {name: '陕西',value: randomData() },
+			                {name: '吉林',value: randomData() },
+			                {name: '福建',value: randomData() },
+			                {name: '贵州',value: randomData() },
+			                {name: '广东',value: randomData() },
+			                {name: '青海',value: randomData() },
+			                {name: '西藏',value: randomData() },
+			                {name: '四川',value: randomData() },
+			                {name: '宁夏',value: randomData() },
+			                {name: '海南',value: randomData() },
+			                {name: '台湾',value: randomData() },
+			                {name: '香港',value: randomData() },
+			                {name: '澳门',value: randomData() },
+			                {name: '南海诸岛',value: 0 }
+			            ]
+			        }
+			    ]
+			};
+			myChart.setOption(option);
+
+		</script>
+	</body>
+</html>

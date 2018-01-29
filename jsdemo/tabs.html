@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			*{padding: 0;margin: 0;list-style-type: none;}
+			.title{height: 30px;}
+			.title li{background-color: #cecece;float: left;margin-right: 2px;padding: 5px;height: 20px;}
+			.title li img{vertical-align: bottom;}
+			.title .bg-e0e0e0{background-color: #f1f1f1;}
+			
+			.table{min-height: 200px;padding: 20px;background-color: #f1f1f1;}
+		</style>
+	</head>
+	<body>
+		<div id="title" class="title">
+			<ul>
+				<li class="bg-e0e0e0">title1 <img src="img/del.png" width="20" name="del"/></li>
+				<li>title2 <img src="img/del.png" width="20" name="del"/></li>
+				<li>title3 <img src="img/del.png" width="20" name="del"/></li>
+				<li><img src="img/add.png" width="20"/></li>
+			</ul>
+		</div>
+		<div id="table" class="table">
+			<div>
+				<p>我是第1个table</p>
+			</div>
+			<div style="display: none;">
+				<p>我是第2个table</p>
+			</div>
+			<div style="display: none;">
+				<p>我是第3个table</p>
+			</div>
+		</div>
+		
+		<script src="js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$("#title li:last").click(function(){
+				var leng = $("#title li").length;
+				if(leng==1){
+					$(this).before('<li class="bg-e0e0e0">title'+leng+' <img src="img/del.png" width="20" name="del"/></li>');
+					$("#table").append('<div><p>我是第'+leng+'个table</p></div>');
+				}else{
+					$(this).before('<li>title'+leng+' <img src="img/del.png" width="20" name="del"/></li>');
+					$("#table").append('<div style="display: none;"><p>我是第'+leng+'个table</p></div>');
+				}
+			})
+			
+			$(document).off("click","#title li:not(:last)").on("click","#title li:not(:last)",function(){
+				$("#title li").removeClass("bg-e0e0e0");
+				$(this).addClass("bg-e0e0e0");
+				
+				$("#table div").hide();
+				$("#table div").eq($("#title li").index(this)).show();
+			})
+			
+			$(document).off("click","#title li img[name='del']").on("click","#title li img[name='del']",function(event){
+				event.stopPropagation();
+				var idx = $("#title li img[name='del']").index(this);
+				
+				if($("#title li").eq(idx).hasClass('bg-e0e0e0')){
+					var length =$("#title li img[name='del']").length;
+					if(idx==0 && length!=1 ){
+						$("#title li").eq(1).click();
+					}else if(idx!=0 && length!=1){
+						$("#title li").eq(idx-1).click();
+					}
+				}
+				
+				$("#title li").eq(idx).remove();
+				$("#table div").eq(idx).remove();
+			})
+			
+		</script>
+		
+	</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			#container{
+				width: 100%;
+				height: 500px;
+			}
+			
+			.poi_tip {
+			    position: relative;
+			    min-width: 50px;
+			    padding-right: 40px;
+			    background: #fff;
+			    border-radius: 2px;
+			    box-shadow: 0 0 8px 0 rgba(0,0,0,.5);
+			    padding-left: 5px;
+			}
+			
+			.poi_tip .poi_name {
+			    line-height: 38px;
+			    padding: 0 10px 0 5px;
+			}
+			
+			.poi_name {
+			    display: inline-block;
+			    padding: 10px 10px 10px 5px;
+			    font-size: 14px;
+			    white-space: nowrap;
+			    color: #3c3d3f;
+			    max-width: 100px;
+			    overflow: hidden;
+			    text-overflow: ellipsis;
+			    vertical-align: middle;
+			}
+			
+			.poi_dir, .poibtn-planadd {
+			    width: 38px;
+			    height: 38px;
+			    position: absolute;
+			    top: 0;
+			    right: 0;
+			    cursor: pointer;
+			    border-top-right-radius: 2px;
+			    border-bottom-right-radius: 2px;
+			}
+			
+			.poi_dir {
+			    background: #3D93FD url(../img/icon_walk.png) center no-repeat;
+			    background-size: 16px ;
+			}
+			
+			.poi_tip .poi_tip_foot {
+			    position: absolute;
+			    bottom: -14px;
+			    left: calc(50% - 6px);
+			    border: 7px solid transparent;
+			    border-top: 8px solid #fff;
+			}
+		</style>
+	</head>
+	<body>
+<div id="container"></div>
+<div id="myPageTop">
+    <table>
+        <tr>
+            <td>
+                <label>请输入关键字：</label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="tipinput"/>
+            </td>
+        </tr>
+    </table>
+</div>
+<button id="aa">清除</button>
+<div id="tip">
+    <span id="result"></span>
+</div>
+<script src="../js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=10552b9a96e02b12e3ed8cc9081422d1&plugin=AMap.Autocomplete,AMap.PlaceSearch,AMap.Walking,AMap.Geocoder"></script>
+<script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+<script type="text/javascript">
+	
+    //地图加载
+      map  = new AMap.Map("container", {resizeEnable: true, center: [116.403851,39.915177],zoom: 13});
+            //输入提示
+            var autoOptions = {
+                input: "tipinput"
+            };
+            var auto = new AMap.Autocomplete(autoOptions);
+            var placeSearch = new AMap.PlaceSearch({
+                map: ''
+            });  //构造地点查询类
+            AMap.event.addListener(auto, "select", select);//注册监听，当选中某条记录时会触发
+            var infoWindow = new AMap.InfoWindow({isCustom: true,offset: new AMap.Pixel(0, -35)});
+            function select(e) {
+                   placeSearch.setCity(e.poi.adcode);
+                   if (e.poi && e.poi.location) {
+                        map.setZoom(15);
+                        map.setCenter(e.poi.location);
+                    }
+                 placeSearch.search(e.poi.name, function(status, result) {
+                    if (status === 'complete' && result.info === 'OK') {                    
+                        for(var h=0;h<result.poiList.pois.length;h++){//返回搜索列表循环绑定marker
+                            var jy=result.poiList.pois[h]['location'];//经纬度
+                            var address=result.poiList.pois[h]['address'];//地址
+                            var marker=new AMap.Marker({  //加点
+                                    map: map,
+                                    position: jy
+                                });
+                            marker.extData = {'getLng':jy['lng'],'getLat':jy['lat'],'address':address};//自定义想传入的参数
+                            marker.content = '1';                       
+                            marker.on("click",function(e) {
+                                var hs=e.target.extData;
+                                 infoWindow.setContent('<div class="poi_tip iw_fadeout" id="BV10244044" style="opacity: 1; display: block; transform: translateX(0px);">  <div class="poi_name">'+hs['address']+'</div> <div class="poi_dir poibtn-planto"></div> <div class="poi_tip_foot"></div> </div>');
+                                 infoWindow.open(map, e.target.getPosition());
+                            });
+                        }
+                    }
+                });  //关键字查询查询
+
+            }
+            
+            map.setZoomAndCenter(17, [113.967284,22.540199]);
+        // 在新中心点添加 marker 
+        var marker = new AMap.Marker({
+            map: map,
+            angle : -90,
+            offset : new AMap.Pixel(-18, -18),
+            position: [113.967284,22.540199],
+         	icon: new AMap.Icon({      
+         		size: new AMap.Size(36, 36),  //图标大小
+	            image: "map-dw.png",
+	        })  
+        });
+        
+        var circle = new AMap.Circle({
+	        center: new AMap.LngLat(113.967284,22.540199),// 圆心位置
+	        radius: 15, //半径
+	        strokeColor: "#6cbffe", //线颜色
+	        strokeOpacity: 1, //线透明度
+	        strokeWeight: 1, //线粗细度
+	        fillColor: "#0090FF", //填充颜色
+	        fillOpacity: 0.2//填充透明度
+	    });
+		circle.setMap(map);
+       
+        var markers = [];
+        markers.push(circle);
+         markers.push(marker);
+         var lng = 113.967284;
+         var lat = 22.540199;
+         var angle = 0;
+        $("#aa").click(function(){
+        	lng = lng - 0.0001;
+        	lat = lat - 0.0001;
+        	angle = angle + 20
+			markers[0].setCenter(new AMap.LngLat(lng,lat));
+			markers[1].setPosition(new AMap.LngLat(lng,lat));
+			markers[1].setAngle(angle);
+        })
+        
+</script>
+	</body>
+</html>

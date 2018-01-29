@@ -1,0 +1,1 @@
+define(["require","exports","module","util"],function(i,t,e){var n=i("util");t.init=function(){$("p").html(n.trim(" 我是【新增】页   "))}});

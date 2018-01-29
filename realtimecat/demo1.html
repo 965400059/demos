@@ -1,0 +1,124 @@
+ <!DOCTYPE html>
+ <html lang="zh-CN">
+
+ <head>
+
+     <meta charset="utf-8">
+     <title>实时猫 Demo</title>
+	<style type="text/css">
+		#media-list{
+			width: 800px;
+			height: 800px;
+			background: #ececec;
+			border: solid 1px #333;
+		}
+	</style>
+ </head>
+
+ <body>
+     <div id="media-list"></div>
+	<!-- jQuery -->
+     <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+     <!-- 实时猫 RealTimeCat JavaScript SDK -->
+     <script src="//cdn.realtimecat.com/realtimecat/realtimecat-0.4.min.js"></script>
+     <script>
+		 var streamvideo = null;
+         (function ($) {
+
+             var session;
+             var localStream;
+            
+             var mediaList = document.querySelector('#media-list');
+
+             /**************************************
+             *               建立会话
+             ***************************************/
+
+             // 使用token新建会话，请将此处的Token替换为
+             // 从http://dashboard.shishimao.com/生成的Token
+             session = new RTCat.Session("06c0c085-5209-4c04-9279-6a77e666e4ac");
+             
+            session.on('connected', function (users) {
+
+                 console.log('Session connected');
+
+                 localStream = new RTCat.Stream({type:'audio'});
+
+                 localStream.on('accepted', function () {
+                         console.log('stream accepted');
+                         session.send({stream: localStream});
+                     }
+                 );
+
+                 localStream.on('error', function (err) {
+                     console.error(err);
+                 });
+
+                 localStream.init();
+				
+             });
+
+             session.on('in', function (token) {
+                 console.log('someone in');
+                 if (localStream) {
+                     session.sendTo({to: token, stream: localStream});
+                 }
+             });
+
+             session.on('out', function (token) {
+                 console.log('someone out');
+             });
+
+             session.on('remote', function (r_channel) {
+                 var id = r_channel.getId();
+                 r_channel.on('stream', function (stream) {
+             		window.streamvideo = stream;
+                    displayStream(id, stream);
+                 });
+                 r_channel.once('close', function () {
+                     $('#peer-' + id).parent().remove();
+                 });
+             });
+
+             session.connect();
+
+             /********************************
+              *           工具函数
+              ********************************/
+             // 显示流
+             function displayStream(id, stream) {
+                 // Video container
+                 var videoContainer = document.createElement("div");
+                 videoContainer.setAttribute('style', "width: 800px; height:800px;");
+
+                 // Video player
+                 var videoPlayer = document.createElement('div');
+                 videoPlayer.setAttribute("id", "peer-" + id);
+
+                 videoContainer.appendChild(videoPlayer);
+                 mediaList.innerHTML = "";
+                 mediaList.appendChild(videoContainer);
+
+                 stream.play("peer-" + id);
+                $("#peer-" + id + " video").attr("width", "100%")
+				$("#peer-" + id + " video").attr("height", "800px");
+             }
+             
+             $("#fbl240").click(function(){
+             	session.sendMessage("be674f69-3f1f-49ea-845a-8f6723638eaf",{state:"50",msg:"切换低分辨率"});
+             })
+             $("#fbl720").click(function(){
+             	session.sendMessage("be674f69-3f1f-49ea-845a-8f6723638eaf",{state:"800",msg:"切换高分辨率"});
+             })
+			$("#fbl1280").click(function(){
+             	session.sendMessage("be674f69-3f1f-49ea-845a-8f6723638eaf",{state:"1280",msg:"切换高分辨率"});
+             })
+			
+			$("#reconnect").click(function(){
+             	session.disconnect();
+             	session.connect();
+             })
+         }).apply(this, [jQuery]);
+     </script>
+ </body>
+ </html>

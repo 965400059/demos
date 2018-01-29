@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		
+		<script src="js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$.ajax({
+				url:'http://www.whoolala.com/postsAPI/showPostsByCategory4Operate?categoryID=1&return_format=json&directPage=2',
+				type:'get',
+				dataType:'jsonp',
+				jsonpCallback:'successCallback',
+				success:function(data){
+					console.log(data.categoriesMap)
+				}
+			})
+
+
+		</script>
+	</body>
+</html>

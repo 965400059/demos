@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+</head>
+<body>
+	
+</body>
+
+<script type="text/javascript">
+   		setTimeout(function(){
+		    var $img = $('<img src="http://jslite.io/blank.gif?'+(new Date())+'">')
+		    $img.appendTo('body').css("display","none").load(function(){
+		        console.log("连接成功！")
+		        $(this).remove()
+		    }).error(function(){
+		        console.log("断网了！")
+		        $(this).remove()
+		    })
+		},2000)
+    </script>
+</html>
+

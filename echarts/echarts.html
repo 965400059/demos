@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<div class="">
+			<button id="year">年</button>
+			<button id="month">月</button>
+			<button id="day">日</button>
+		</div>
+		<div id="main" style="width: 100%;height:400px;"></div>
+		
+		<script src="../js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/echarts/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var myChart = echarts.init(document.getElementById('main'));
+			var mydate = new Date();
+			var newYear = mydate.getFullYear();
+			xAxisData = {year:[newYear-4,newYear-3,newYear-2,newYear-1,newYear],
+						month:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+						day:['周一','周二','周三','周四','周五','周六','周日']}
+			
+			seriesData= {year:[
+							[120, 132, 101, 134, 90],
+							[220, 182, 191, 234, 290],
+							[150, 232, 201, 154, 190]
+						],month:[
+							[120, 132, 101, 134, 90, 230, 210,120, 132, 101, 134, 90],
+							[220, 182, 191, 234, 290, 330, 310,220, 182, 191, 234, 290],
+							[150, 232, 201, 154, 190, 330, 410, 150, 232, 201, 154, 190],							
+						],day:[
+							[120, 132, 101, 134, 90, 230, 210],
+							[220, 182, 191, 234, 290, 330, 310],
+							[150, 232, 201, 154, 190, 330, 410]
+						]}
+			
+			setEcharts(xAxisData.month,seriesData.month);
+			
+			$("#year").click(function(){
+				setEcharts(xAxisData.year,seriesData.year);
+			})
+			
+			$("#month").click(function(){
+				setEcharts(xAxisData.month,seriesData.month);
+			})
+			
+			$("#day").click(function(){
+				setEcharts(xAxisData.day,seriesData.day);
+			})
+			
+			function setEcharts(xData,sData){
+				option = {
+					color :['#000000','#ff0000'],
+				    title: {
+				        text: '堆叠区域图'
+				    },
+				    tooltip : {
+				        trigger: 'axis'
+				    },
+				    legend: {
+				        data:['邮件营销','联盟广告','视频广告']
+				    },
+				   
+				    grid: {
+				        left: '3%',
+				        right: '4%',
+				        bottom: '3%',
+				        containLabel: true
+				    },
+				    xAxis : [
+				        {
+				            splitLine: {
+				                show: true,
+				                lineStyle: {
+				                    color: '#ECECEC'
+				                }
+				            },
+				            type : 'category',
+				            boundaryGap : false,
+				            data : xData
+				        }
+				    ],
+				    yAxis : [
+				        {   
+				            splitLine: {
+				                lineStyle: {
+				                    color: '#ECECEC'
+				                }
+				            },
+				            type : 'value'
+				        }
+				    ],
+				    series : [
+				        {
+				            name:'邮件营销',
+				            showSymbol: true,
+				            type:'line',
+				            stack: '总量',
+				            data: sData[0]
+				        },
+				        {
+				            name:'联盟广告',
+				            type:'line',
+				            stack: '总量',
+				            data: sData[1]
+				        },
+				        {
+				            name:'视频广告',
+				            type:'line',
+				            stack: '总量',
+				            data: sData[2]
+				        }
+				    ]
+				};
+				
+				myChart.setOption(option);
+			}
+
+		</script>
+	</body>
+</html>

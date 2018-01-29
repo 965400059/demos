@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>RequireJS Async plugin</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css"/>
+    </head>
+    <body>
+        <div id="container"></div>
+        <script src="require.js"></script>
+        <script>
+            require(
+                [
+                    'http://webapi.amap.com/maps?v=1.3&key=10552b9a96e02b12e3ed8cc9081422d1&plugin=AMap.LineSearch',
+                    'http://cache.amap.com/lbs/static/addToolbar.js'
+                ],
+                function(){
+                    var map = new AMap.Map("container", {
+				        resizeEnable: true,
+				        center: [113.564914008247,22.311818847657],
+				        zoom: 13
+				    });
+				});
+        </script>
+    </body>
+</html>
