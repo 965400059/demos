@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="./wangEditor-mobile.min.css">
+  <style type="text/css">
+    .container {
+        width:100%; 
+        height:300px; 
+        border:1px solid #ccc;
+    }
+</style>
+</head>
+<body>
+    <p>wangEditor-mobile test</p>
+
+	<div class="container">
+		<textarea id="textarea1" style="width:100%;height:100%;">
+			<p>请输入内容...</p>
+		</textarea>
+	</div>
+
+    <!-- 注意， 只需要引用 JS，无需引用任何 CSS ！！！-->
+    <script src="./lib/zepto.js"></script>
+    <script src="./lib/zepto.touch.js"></script>
+    <script type="text/javascript" src="./wangEditor-mobile.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+			// ___E 三个下划线
+			var editor = new ___E('textarea1');
+			editor.init();
+		});
+    </script>
+</body>
+</html>

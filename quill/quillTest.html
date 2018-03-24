@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="./quill.snow.css">
+  <style>
+    #editor{
+      min-height: 200px;
+    }
+  </style>
+</head>
+<body>
+    <div id="editor"></div>
+    <div id="editor1"></div>
+
+  <script src="./quill.js"></script>
+  <script>
+  var toolbarOptions = [
+    [{ 'font': [] }],
+    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+    ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+    [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+    ['image'],
+    [{ 'align': [] },{ 'indent': '-1'}, { 'indent': '+1' },{ 'list': 'ordered'}, { 'list': 'bullet' }],
+    ['blockquote', 'code-block'],
+    [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+    [{ 'direction': 'rtl' }],                         // text direction
+    ['clean']                                         // remove formatting button
+  ];
+
+  var quill = new Quill('#editor', {
+    modules: {
+      toolbar: toolbarOptions
+    },
+    placeholder: 'Compose an epic...',
+    theme: 'snow'
+  });
+
+  var quill1 = new Quill('#editor1', {
+    modules: {
+      toolbar: toolbarOptions
+    },
+    placeholder: 'Compose an epic...',
+    theme: 'snow'
+  });
+
+  quill.setText('Hello World!');
+
+  var quillHtml = quill.getContents();
+  //上传服务器我们一般都会先转出json格式，
+  var a = JSON.stringify(quillHtml)
+  console.log(a);
+  console.log(JSON.parse(a))
+
+  quill1.setContents(quillHtml);
+
+  </script>
+</body>
+</html>
