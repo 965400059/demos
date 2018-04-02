@@ -92,8 +92,10 @@ function pageInit(){
 		$("#list2").jqGrid("setGridParam",{postData:parseFormToObj("#testForm"),page:1}).trigger("reloadGrid"); 
 	});
 
+	//显示全部字段
 	$("#showAllCol").click(function(){
 		$("#list2").jqGrid("setGridParam",{shrinkToFit:false}).jqGrid("showCol",['name','note']).trigger("reloadGrid"); 
+		$(this).hide();
 	});
 
 
