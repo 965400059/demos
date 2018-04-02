@@ -105,6 +105,7 @@
 				
 				//窗口大小发生改变刷新表格宽度
 				$(window).on('resize.jqGrid', function() {
+					console.log(window.screen.width);
 					$("#list2").jqGrid('setGridWidth', $("body").width());
 				})
 				
