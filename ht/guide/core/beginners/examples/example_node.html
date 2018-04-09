@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Node</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>            
+            
+            function init(){                                                                
+                dataModel = new ht.DataModel(); //创建数据模型
+                graphView = new ht.graph.GraphView(dataModel); //创建一个2D的数据模型
+                view = graphView.getView();//获取ht底层的div组件            
+
+                view.className = 'main';//设置div的样式为main
+                document.body.appendChild(view);    //将div内部添加到body下
+                window.addEventListener('resize', function (e) {//窗口大小发生改变的事件监控
+                    graphView.invalidate();//窗口大小发生改变触发ht的的函数的通知和更新
+                }, false);                         
+                    
+                ht.Default.setImage('mac', 'res/mac-air.png');     //ht.Default 工具类函数的默认值，setImage，是设置一个名词为mac的图片地址为res/mac-air.png       
+                     
+                air11 = new ht.Node();  //创建一个节点图元的基础类
+                air11.setName('11-inch MacBook Air');
+                air11.setImage('mac');
+                air11.setSize(80, 43);
+                air11.setPosition(100, 70);                
+                dataModel.add(air11);
+                
+                air13 = new ht.Node();
+                air13.setName('13-inch MacBook Air');                
+                air13.setImage('res/mac-air.png');
+                air13.setPosition(260, 70);//设置图元中心点坐标
+                air13.setRotation(Math.PI/2);//设置图元的旋转角度，围绕中心点顺时针旋转
+                dataModel.add(air13);
+                
+                air11.setHost(air13);   //获取和设置吸附宿主对象，当节点吸附上宿主图元时，宿主移动或旋转时会带动所有吸附者
+                
+                graphView.setEditable(true);//是否可编辑
+                graphView.setRectEditableFunc(function(data){//air11添加大小编辑操作
+                    return data === air11;
+                });
+                graphView.setRotationEditableFunc(function(data){//air13添加旋转操作
+                    return data === air13;
+                });
+                
+                var eventType = ht.Default.isTouchable ? 'touchend' : 'mouseup';//判断是手机还是pc添加不同的绑定事件
+                graphView.getView().addEventListener(eventType, function(e){
+                    var data = graphView.getDataAt(e);//直接查找到事件下的图元
+                    if(data && ht.Default.isDoubleClick(e)){//ht.Default.isDoubleClick(e)  判断是不是双击
+                        alert(data.getName() + ' is double clicked.');
+                    }
+                });
+            }
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

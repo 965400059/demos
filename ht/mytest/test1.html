@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    html, body {
+        padding: 0;
+        margin: 0;                
+    }            
+    .main {
+      margin: 0px;
+      padding: 0px;
+      position: absolute;
+      top: 0px;
+      bottom: 0px;
+      left: 0px;
+      right: 0px;
+    }    
+  </style>  
+  <script src="../lib/core/ht.js"></script>
+  <script>
+    function init(){
+      var dataModel = new ht.DataModel(),
+        graphView = new ht.graph.GraphView(dataModel),
+        view = graphView.getView();            
+
+      view.className = 'main';
+      document.body.appendChild(view);    
+      window.addEventListener('resize', function (e) {
+        graphView.invalidate();
+      }, false);   
+
+      var source = createNode("source",100,100);
+      var target = createNode("target",600,600);
+
+      function createNode(name, x,y){
+        var node = new ht.Node();
+        node.setName(name);
+        node.setPosition(x, y);
+        dataModel.add(node); 
+        return node;
+      };
+
+      var edge = new ht.Edge();//创建一个连接线
+      edge.setSource(source);//设置起始点
+      edge.setTarget(target);//设置目标点
+      edge.s({
+        'edge.width': 8,
+        'edge.color': '#aadfff',
+        'edge.cap':'round',
+        'edge.dash': true,
+        'edge.dash.color': '#47b6f9',
+        'edge.dash.pattern': [32, 48],
+        'edge.type': 'points',
+        'edge.points': [{x : 100, y: 600}]
+      })
+      dataModel.add(edge);     
+      
+      flowTask = {
+        interval: 40,
+        action: function(data){   
+            if(data instanceof ht.Edge){
+                data.s('edge.dash.offset', data.s('edge.dash.offset')-5);
+            }
+        }
+      };
+      dataModel.addScheduleTask(flowTask); 
+
+      var polyline = new ht.Polyline();
+        polyline.s({
+          'shape.border.width': 10,
+          'shape.border.cap': 'round',
+          'shape.border.color': '#aadfff',
+          'shape.dash': true,
+          'shape.dash.width': 10,
+          'shape.dash.color': '#47b6f9',
+          'shape.dash.pattern': [32, 48],
+      });
+      polyline.setSegments([1, 2, 2, 5, 1, 3, 1, 4]);
+      polyline.setPoints([{x: 300, y: 20}, {x: 400, y: 20}, {x: 350, y: 100},{x: 400, y: 100}, {x: 350, y: 200},
+                          {x: 300, y: 100},{x: 300, y: 200}, {x: 300, y: 120}, {x: 400, y: 120}, {x: 400, y: 200}]);  
+      // dataModel.add(polyline);
+
+      var shape = new ht.Shape();
+      shape.s({
+          "shape.background": null,
+          'shape.border.width': 6,
+          'shape.border.cap': 'round',
+          'shape.border.color': 'rgb(25,119,250)',
+          'shape.dash': true,
+          'shape.dash.width': 6,
+          'shape.dash.color': 'rgb(0,153,255)',
+          'shape.dash.pattern': [64, 48],
+          "2d.movable": false
+      });
+      shape.setSegments([1, 2, 2, 2, 2, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2]);
+      shape.setPoints([{x: 400, y: 100}, {x: 400, y: 500}, {x: 450, y: 500},{x: 450, y: 80},{x: 500, y: 80},
+                          {x: 1200, y: 250},{x: 1200, y: 500},{x: 860, y: 500},  
+                          {x: 720, y: 500},{x: 520, y: 500}, 
+                          {x: 840, y: 500},{x: 740, y: 500},
+                          {x: 500, y: 500},{x: 450, y: 500},
+                          {x: 450, y: 80},{x: 500, y: 80},
+                          {x: 450, y: 300},{x: 500, y: 300},
+                          {x: 520, y: 300},{x: 570, y: 300},
+                          {x: 520, y: 80},{x: 570, y: 80}
+                          ]);  
+      dataModel.add(shape);
+
+      flowTask = {
+        interval: 40,
+        action: function(data){   
+            if(data instanceof ht.Shape){
+                data.s('shape.dash.offset', data.s('shape.dash.offset')-5);
+            }
+        }
+      };
+      dataModel.addScheduleTask(flowTask); 
+
+      var shape = new ht.Node();
+
+    }
+  </script>
+</head>
+<body onload="init();">
+  
+</body>
+</html>
