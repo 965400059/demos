@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>mqtt-测试案例</title>
+</head>
+<body>
+<span>发送消息</span><input type="text" id="msg" value=""> <button onclick="sendMsg()">发送</button>
+<h3>接收到的消息</h3>
+<div style="height: 300px;width: 800px;border-bottom-width: 2px" id="outMes">
+
+</div>
+<h3>发送出的消息</h3>
+<div style="height: 300px;width: 800px;border-bottom-width: 2px" id="inMes">
+
+</div>
+
+<script src="jquery-1.11.3.min.js"></script>
+<script src="mqttws31.js" type="text/javascript"></script>  
+<script>
+client = new Paho.MQTT.Client("192.168.1.112", Number(8083),"test01");//建立客户端实例
+        client.onConnectionLost = onConnectionLost;//注册连接断开处理事件  
+        client.onMessageArrived = onMessageArrived;//注册消息接收处理事件  
+        client.connect({onSuccess:onConnect});//连接服务器并注册连接成功处理事件  
+        function onConnect() {  
+            console.log("onConnected");  
+            client.subscribe("topic-alert");//订阅主题
+            client.subscribe("topic-ok");//订阅主题
+            client.subscribe("topic-else");//订阅主题
+        }  
+    
+        function onConnectionLost(responseObject) {  
+            if (responseObject.errorCode !== 0) {  
+                console.log("onConnectionLost:"+responseObject.errorMessage);  
+                console.log("连接已断开");  
+             }  
+        }  
+        function onMessageArrived(message) {
+            var topic= message.destinationName;
+            $("#outMes").append("<p>时间："+new Date().toDateString()+"，类型："+topic+"，内容："+message.payloadString+"</p>");
+        }  
+        
+        function sendMsg() {
+            var msg=$("#msg").val();
+			/*var mesVal={}; //"{"deviceId":115454,"type":1,"msg":"mmmm"}"
+			mesVal.deviceId=115454;
+			mesVal.type=1;
+			mesVal.msg="mmmm";*/
+            //发送消息
+            message = new Paho.MQTT.Message(msg);
+            message.destinationName = "topic-Interactive";
+            client.send(message);
+            $("#inMes").append("<p>时间："+new Date().toDateString()+"，内容："+msg+"</p>");
+        }
+      
+</script>
+</body>
+</html>

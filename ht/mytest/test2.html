@@ -1,186 +1,543 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Preview Display</title>
-    <meta charset="UTF-8">
-    <link rel="shortcut icon" href="favicon.ico" />
-    <style>
-      html, body {
-          padding: 0;
-          margin: 0;                
-      }            
-      .main {
-        margin: 0px;
-        padding: 0px;
-        position: absolute;
-        top: 0px;
-        bottom: 0px;
-        left: 0px;
-        right: 0px;
-      }    
-    </style>  
-    <script src="../lib/core/ht.js"></script>
-    <script>
-      function init() {
-        dataModel = new ht.DataModel();
-        graphView = new ht.graph.GraphView(dataModel);
-        graphView.addToDOM();
 
-        graphView.mi(function(e) {
-          if (e.kind !== 'doubleClickData') return;
+<head>
+  <title>Preview Display</title>
+  <meta charset="UTF-8">
+  <link rel="shortcut icon" href="favicon.ico" />
+  <style>
+    html,
+    body {
+      padding: 0;
+      margin: 0;
+      background: #000;
+    }
 
-          var data = e.data;
-          if (data.a('switch'))
-            updateSwitchStatus(data, !data.a('closed'));
-        });
+    .top {
+      position: absolute;
+      z-index: 10000;
+    }
 
-        ht.Default.xhrLoad('water treatment2.json', function(text) {
-          var json = ht.Default.parse(text);
-          dataModel.deserialize(json);
+    .panel {
+      border: 1px solid #fff;
+      background: #000;
+      font-size: 13px;
+      width: 10em;
+      color: #fff;
+      text-align: center;
+      height: 26px;
+      line-height: 26px;
+    }
+  </style>
+</head>
 
-          graphView.fitContent(true);
+<body>
+  <div class="top">
+    <button onclick="startUp()">启动</button>
+    <button onclick="stop()">停止</button>
+    <button onclick="add()">加一个产品</button>
+  </div>
 
-          updatePoolDeep(dataModel.toDatas(function(d) { return d.getDisplayName() === 'pool'; }));
-          updateDataPane(dataModel.toDatas(function(d) { return d.getDisplayName() === 'dataPane'; }));
-        });
+  <script src="../lib/core/ht.js"></script>
+  <script src="./jquery-1.11.3.min.js"></script>
+  <script src="../lib/plugin/ht-flow.js"></script>
+  <script src="./handlebars-v4.0.11.js"></script>
+  <script src="../lib/plugin/ht-htmlnode.js"></script>
 
-        window.addEventListener('resize', function() {
-          graphView.fitContent();
-        });
 
-        var dlt = 5, max = 100000000;
-        dataModel.addScheduleTask({
-          interval: 50,
-          action: function(data){
-            if (data.a('switch')) {
-              randomSwitch(data);
-              return;
-            }
+  <script id="tmpl-count1" type="text/x-handlebars-template">
+    <div class="panel">产能： <b>{{value}}</b></div>
+  </script>
+  <script id="tmpl-count2" type="text/x-handlebars-template">
+    <div class="panel">产能： <b>{{value}}</b></div>
+  </script>
+  <script id="tmpl-count3" type="text/x-handlebars-template">
+    <div class="panel">结果： <b>{{value}}</b></div>
+  </script>
+  <script id="tmpl-count4" type="text/x-handlebars-template">
+    <div class="panel">结果： <b>{{value}}</b></div>
+  </script>
+  <script id="tmpl-count5" type="text/x-handlebars-template">
+    <div class="panel">结果： <b>{{value}}</b></div>
+  </script>
 
-            if (data instanceof ht.Shape) {
-              if (!data.s('shape.dash')) return;
+  <script>
 
-              var k = data.s('2d.movable') ? 1 : -1;
-              var offset = data.s('shape.dash.offset') || 0;
-              data.s('shape.dash.offset', (offset + k * dlt) % max);
-              return;
-            }
-          }
-        });
-      }
-
-      function randomSwitch(data) {
-        var ran = Math.random() < 0.001;
-        if (!ran) return;
-
-        updateSwitchStatus(data, !data.a('closed'));
-      }
-
-      function updateSwitchStatus(data, v) {
-        data.a('closed', v);
-
-        v = !v;
-
-        // 判断父亲
-        var p = data.getParent();
-        var pp = p.getParent();
-        if (pp instanceof ht.Shape) {
-          // 自身没有开关的情况下，判断所有孩子开关的状态
-          var children = pp.getChildren();
-          var switchs = children.toList(function(d) { return d.a('switch'); });
-          if (switchs.length === 0) {
-            var run = v;
-            if (!run) {
-              var shapes = children.toList(function(d) { return d instanceof ht.Shape; });
-              shapes.each(function(s) {
-                if (s === p) return;
-
-                run = run || s.s('shape.dash');
-              });
-            }
-
-            pp.s('shape.dash', run);
-          }
-
-          v = pp.s('shape.dash') && v;
+    var greenLight = {
+      "width": 48,
+      "height": 48,
+      "boundExtend": 18,
+      "comps": [
+        {
+          "type": "circle",
+          "background": "rgb(21,112,21)",
+          "borderWidth": 1,
+          "borderColor": "rgb(67,112,59)",
+          "gradient": "radial.center",
+          "gradientColor": "rgb(93,217,174)",
+          "shadow": true,
+          "shadowColor": "rgb(103,224,103)",
+          "shadowBlur": 18,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "rect": [
+            2.52281,
+            0,
+            42.95439,
+            48
+          ]
+        },
+        {
+          "type": "shape",
+          "background": "rgba(255,255,255,0.57)",
+          "borderColor": "#979797",
+          "gradient": "linear.east",
+          "gradientColor": "rgba(255,255,255,0.00)",
+          "points": [
+            15.41999,
+            11.26345,
+            15.41999,
+            8.46243,
+            21.24213,
+            6.60857,
+            22.11543,
+            9.34699,
+            16.27298,
+            12.55797,
+            22.11543,
+            10.34967,
+            22.11543,
+            12.55797,
+            26.35192,
+            14.17662,
+            32.19073,
+            16.79079,
+            36.24218,
+            21.88924,
+            39.52409,
+            21.88924,
+            39.52409,
+            14.17662,
+            35.17839,
+            9.11859,
+            24.14181,
+            6.60857,
+            26.35192,
+            14.17662
+          ],
+          "segments": [
+            1,
+            2,
+            2,
+            2,
+            1,
+            2,
+            2,
+            1,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ]
         }
-        p.s('shape.dash', v);
+      ]
+    }
 
-        // 判断孩子
-        var shapes = [];
-        p.getChildren().each(function(d) {
-          if (!(d instanceof ht.Shape)) return;
+    var redLight = {
+      "width": 48,
+      "height": 48,
+      "boundExtend": 18,
+      "comps": [
+        {
+          "type": "circle",
+          "background": "rgb(133,25,25)",
+          "borderWidth": 1,
+          "borderColor": "rgb(112,59,59)",
+          "gradient": "radial.center",
+          "gradientColor": "rgb(232,90,58)",
+          "shadow": true,
+          "shadowColor": "rgb(242,83,75)",
+          "shadowBlur": 18,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "rect": [
+            2.52281,
+            0,
+            42.95439,
+            48
+          ]
+        },
+        {
+          "type": "shape",
+          "background": "rgba(255,255,255,0.57)",
+          "borderColor": "#979797",
+          "gradient": "linear.east",
+          "gradientColor": "rgba(255,255,255,0.00)",
+          "points": [
+            15.41999,
+            11.26345,
+            15.41999,
+            8.46243,
+            21.24213,
+            6.60857,
+            22.11543,
+            9.34699,
+            16.27298,
+            12.55797,
+            22.11543,
+            10.34967,
+            22.11543,
+            12.55797,
+            26.35192,
+            14.17662,
+            32.19073,
+            16.79079,
+            36.24218,
+            21.88924,
+            39.52409,
+            21.88924,
+            39.52409,
+            14.17662,
+            35.17839,
+            9.11859,
+            24.14181,
+            6.60857,
+            26.35192,
+            14.17662
+          ],
+          "segments": [
+            1,
+            2,
+            2,
+            2,
+            1,
+            2,
+            2,
+            1,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ]
+        }
+      ]
+    }
 
-          shapes.push(d);
-        });
+    var yellowLight = {
+      "width": 48,
+      "height": 48,
+      "boundExtend": 18,
+      "comps": [
+        {
+          "type": "circle",
+          "background": "#FEB64D",
+          "borderWidth": 1,
+          "borderColor": "rgb(112,95,59)",
+          "gradient": "radial.center",
+          "gradientColor": "rgb(226,250,87)",
+          "shadow": true,
+          "shadowColor": "#FEB64D",
+          "shadowBlur": 18,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "rect": [
+            2.52281,
+            0,
+            42.95439,
+            48
+          ]
+        },
+        {
+          "type": "shape",
+          "background": "rgba(255,255,255,0.57)",
+          "borderColor": "#979797",
+          "gradient": "linear.east",
+          "gradientColor": "rgba(255,255,255,0.00)",
+          "points": [
+            15.41999,
+            11.26345,
+            15.41999,
+            8.46243,
+            21.24213,
+            6.60857,
+            22.11543,
+            9.34699,
+            16.27298,
+            12.55797,
+            22.11543,
+            10.34967,
+            22.11543,
+            12.55797,
+            26.35192,
+            14.17662,
+            32.19073,
+            16.79079,
+            36.24218,
+            21.88924,
+            39.52409,
+            21.88924,
+            39.52409,
+            14.17662,
+            35.17839,
+            9.11859,
+            24.14181,
+            6.60857,
+            26.35192,
+            14.17662
+          ],
+          "segments": [
+            1,
+            2,
+            2,
+            2,
+            1,
+            2,
+            2,
+            1,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ]
+        }
+      ]
+    }
 
-        if (shapes.length === 0) return;
+    var isStart = false;
+    var dataModel = new ht.DataModel();
+    var graphView = new ht.graph.GraphView(dataModel);
+    graphView.addToDOM();
+    graphView.setEditable(true);
+    var node = new ht.Node();
+    var node1 = new ht.Node();
+    var node2 = new ht.Node();
+    var node3 = new ht.Node();
+    var node4 = new ht.Node();
+    var shape = new ht.Shape();
+    var shape1 = new ht.Shape();
 
-        shapes.forEach(function(s) {
-          s.getChildren().each(function(d) {
-            if (!d.a('switch')) return;
+    var context1 = { value: 0 };
+    var node5 = new ht.HtmlNode();
+    node5.setPosition(300, 50);
+    node5.setHtml(document.getElementById("tmpl-count1").innerHTML);
+    node5.setContext(context1);
+    dataModel.add(node5);
 
-            d.getParent().s('shape.dash', v && !d.a('closed'));
-          })
-        });
+    var context2 = { value: 0 };
+    var node6 = new ht.HtmlNode();
+    node6.setPosition(700, 50);
+    node6.setHtml(document.getElementById("tmpl-count2").innerHTML);
+    node6.setContext(context2);
+    dataModel.add(node6);
+
+    var context3 = { value: "" };
+    var node7 = new ht.HtmlNode();
+    node7.setPosition(100, 50);
+    node7.setHtml(document.getElementById("tmpl-count3").innerHTML);
+    node7.setContext(context3);
+    dataModel.add(node7);
+
+    var context4 = { value: "" };
+    var node8 = new ht.HtmlNode();
+    node8.setPosition(500, 50);
+    node8.setHtml(document.getElementById("tmpl-count4").innerHTML);
+    node8.setContext(context4);
+    dataModel.add(node8);
+
+    var context5 = { value: "" };
+    var node9 = new ht.HtmlNode();
+    node9.setPosition(900, 50);
+    node9.setHtml(document.getElementById("tmpl-count5").innerHTML);
+    node9.setContext(context5);
+    dataModel.add(node9);
+
+    function init() {
+      var json = ht.Default.parse(yellowLight);
+      node.setImage(json);
+      node.setPosition(100, 100);
+      dataModel.add(node);
+
+      node1.setImage(json);
+      node1.setPosition(500, 100);
+      dataModel.add(node1);
+
+      node2.setImage(json);
+      node2.setPosition(900, 100);
+      dataModel.add(node2);
+
+      node3.setSize(48, 48);
+      node3.setPosition(300, 100);
+      dataModel.add(node3);
+
+      node4.setSize(48, 48);
+      node4.setPosition(700, 100);
+      dataModel.add(node4);
+
+      shape.setPoints(new ht.List([
+        { x: 115, y: 100 },
+        { x: 245, y: 100 },
+        { x: 315, y: 100 },
+        { x: 445, y: 100 }
+      ]));
+      shape.setSegments(new ht.List([
+        1, 2, 1, 2
+      ]));
+      shape.translate(20, 0);
+      shape.s({
+        "shape.background": null,
+        'shape.border.width': 6,
+        'shape.border.cap': 'round',
+        'shape.border.color': '#3498DB',
+        'shape.dash': true,
+        'shape.dash.width': 6,
+        'shape.dash.color': 'red',
+        'shape.dash.pattern': [32, 48],
+        "2d.movable": false,
+        "flow.element.max": 11,
+        "flow.element.min": 2,
+        "flow": false,
+        "flow.count": 0,
+        "flow.step": 0
+      });
+      dataModel.add(shape);
+
+      shape1.setPoints(new ht.List([
+        { x: 515, y: 100 },
+        { x: 645, y: 100 },
+        { x: 715, y: 100 },
+        { x: 845, y: 100 }
+      ]));
+      shape1.setSegments(new ht.List([
+        1, 2, 1, 2
+      ]));
+      shape1.translate(20, 0);
+      shape1.s({
+        "shape.background": null,
+        'shape.border.width': 6,
+        'shape.border.cap': 'round',
+        'shape.border.color': '#3498DB',
+        'shape.dash': true,
+        'shape.dash.width': 6,
+        'shape.dash.color': 'red',
+        'shape.dash.pattern': [32, 48],
+        "2d.movable": false,
+        "flow.element.max": 11,
+        "flow.element.min": 2,
+        "flow": false,
+        "flow.count": 0,
+        "flow.step": 0
+      });
+      dataModel.add(shape1);
+    }
+
+    init();
+
+    var flowTask = {
+      interval: 40,
+      action: function (data) {
+        if (data instanceof ht.Shape) {
+          data.s('shape.dash.offset', data.s('shape.dash.offset') - 5);
+        }
       }
+    };
 
-      function updatePoolDeep(pools) {
-        var deepDlt = 0.1, offsetDlt = 2;
-        setInterval(function() {
-          pools.each(function(p) {
-            var flag = p.a('flag') || -1;
-            var deep = p.getAnchorY() * 100;
-            var v = deep + flag * deepDlt;
-            if (v > 100) {
-              v = 100;
-              flag = -1;
-            }
-            else if (v < 0) {
-              v = 0;
-              flag = 1;
-            }
-            setPoolDeep(p, v);
-            p.a('flag', flag);
+    var setColor = function (node, light) {
+      var json = ht.Default.parse(light);
+      node.setImage(json);
+      setTimeout(() => {
+        var json = ht.Default.parse(yellowLight);
+        node.setImage(json);
+      }, 200);
+    }
 
-            var offsetFlag = p.a('offsetFlag') || 1;
-            var offset = (p.a('offsetX') || 0) + offsetDlt * offsetFlag;
-            if (offset > 50) {
-              offset = 50;
-              offsetFlag = -1;
+    var startUp = function () {
+      isStart = true;
+      dataModel.addScheduleTask(flowTask);
+      graphView.enableFlow(60);
+      setInterval(() => {
+        add();
+      },5400)
+    }
+
+    var stop = function () {
+      isStart = false;
+      dataModel.removeScheduleTask(flowTask);
+      graphView.disableFlow()
+      shape.s("flow.count", 0);
+      shape.s("flow.step", 0);
+      shape1.s("flow.count", 0);
+      shape1.s("flow.step", 0);
+      setColor(node, yellowLight);
+      setColor(node1, yellowLight);
+      setColor(node2, yellowLight);
+    }
+
+    var add = function () {
+      if (isStart) {
+          shape.s("flow", true);
+          shape.s("flow.count", 1);
+          shape.s("flow.step", 6);
+          setColor(node, greenLight);
+          context3.value = 'PASS';
+          graphView.invalidateData(node7);
+          setTimeout(() => {
+            context1.value++;
+            graphView.invalidateData(node5);
+          }, 1300);
+          setTimeout(function () {
+            shape.s("flow", false);
+            shape.s("flow.count", 0);
+            shape.s("flow.step", 0);
+            let oneFLag = Math.random() > 0.3
+            if (oneFLag) {
+              setColor(node1, greenLight);
+              context4.value = 'PASS';
+              graphView.invalidateData(node8);
+              shape1.s("flow", true);
+              shape1.s("flow.count", 1);
+              shape1.s("flow.step", 6);
+              setTimeout(() => {
+                context2.value++;
+                graphView.invalidateData(node6);
+              }, 1300);
+              setTimeout(function () {
+                shape1.s("flow", false);
+                shape1.s("flow.count", 0);
+                shape1.s("flow.step", 0);
+                let twoFLag = Math.random() > 0.3
+                if (twoFLag) {
+                  setColor(node2, greenLight);
+                  context5.value = 'PASS';
+                  graphView.invalidateData(node9);
+                } else {
+                  setColor(node2, redLight);
+                  context5.value = 'NG';
+                  graphView.invalidateData(node9);
+                }
+              }, 2600);
+            } else {
+              setColor(node1, redLight);
+              context4.value = 'NG';
+              graphView.invalidateData(node8);
             }
-            else if (offset < -50) {
-              offset = -50;
-              offsetFlag = 1;
-            }
-            p.a('offsetX', offset);
-            p.a('offsetFlag', offsetFlag);
-          });
-        }, 50);
+          }, 2600);
       }
+    }
 
-      function setPoolDeep(pool, deep) {
-        pool.getChildren().each(function(c) {
-          if (c.getDisplayName() !== 'screen') return;
 
-          c.a('deep', deep);
-        });
 
-        deep = deep * 0.01;
-        pool.setAnchorY(deep);
-        pool.s('clip.percentage', deep);
-      }
 
-      function updateDataPane(panes) {
-        setInterval(function() {
-          panes.each(function(p) {
-            p.a('speed', Math.random() * 40 + 30);
-          });
-        }, 500);
-      }
 
-    </script>
-  </head>
-  <body onload='setTimeout(init, 300)'>
-  </body>
+  </script>
+</body>
+
 </html>
